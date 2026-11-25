@@ -87,6 +87,17 @@ The project uses **PredatorNet**, a custom deep learning architecture built on a
 - Region importance map.
 - Spatial attention map.
 
+### Architecture Diagram
+
+```mermaid
+flowchart TD
+    A["Input MRI Image"] --> B["ResNet-50 Feature Extractor"]
+    B --> C["EagleAttention"]
+    C --> D["RegionImportance"]
+    D --> E["WolfPackFusion"]
+    E --> F["Alzheimer's Classification"]
+```
+
 ## 5. Loss Functions
 
 ### BGRA Baseline Loss
@@ -130,18 +141,10 @@ Validation and test data must not update the confusion statistics.
 
 ## 6. Project Structure
 
-```text
 ACAL-AD/
 │
 ├── configs/
 │   └── config.yaml
-│
-├── data/
-│   └── raw/
-│       ├── MildDemented/
-│       ├── ModerateDemented/
-│       ├── NonDemented/
-│       └── VeryMildDemented/
 │
 ├── models/
 │   ├── PredatorNet_ACAL_Seed123.pt
@@ -152,20 +155,13 @@ ACAL-AD/
 ├── notebooks/
 │   └── predatornet_training.ipynb
 │
-├── outputs/
-│   ├── dataset_inspection/
-│   ├── dataset_split/
-│   ├── evaluation/
-│   ├── evaluation_results/
-│   ├── evaluation_reconstructed_80_10_10/
-│   └── visualizations/
-│
 ├── scripts/
 │   ├── analyze_duplicates.py
 │   ├── check_environment.py
 │   ├── compare_experiments.py
 │   ├── detect_near_duplicates.py
 │   ├── evaluate_checkpoints.py
+│   ├── evaluate_reconstructed_split.py
 │   ├── inspect_dataset.py
 │   ├── predict_image.py
 │   ├── prepare_dataset.py
@@ -179,18 +175,15 @@ ACAL-AD/
 │   │   ├── dataloader.py
 │   │   ├── dataset.py
 │   │   └── preprocessing.py
-│   │
 │   ├── evaluation/
 │   │   ├── confusion_matrix.py
 │   │   ├── metrics.py
 │   │   └── visualization.py
-│   │
 │   ├── losses/
 │   │   └── losses.py
-│   │
 │   ├── models/
 │   │   └── predatornet.py
-│   │
+│   ├── utils/
 │   ├── checkpoint_utils.py
 │   ├── config.py
 │   ├── data_audit.py
@@ -198,12 +191,16 @@ ACAL-AD/
 │   └── splitting.py
 │
 ├── tests/
+│   ├── test_config.py
+│   ├── test_data_audit.py
+│   ├── test_preprocessing.py
+│   └── test_splitting.py
 │
+├── .gitattributes
 ├── .gitignore
 ├── README.md
 ├── requirements.txt
 └── requirements-dev.txt
-```
 
 ## 7. Technology Stack
 

@@ -23,7 +23,22 @@ The project uses a custom **PredatorNet** architecture based on ResNet-50.
 - Compare the proposed ACAL approach against the BGRA baseline.
 - Evaluate model performance across different random seeds.
 - Generate classification reports, confusion matrices, and ROC curves.
-- Maintain research reproducibility and perform data leakage checks.
+- Maintain research reproducibility and perform data leakage checks.\
+
+### Project Workflow
+
+```mermaid
+flowchart TD
+    A["MRI Dataset"] --> B["Dataset Inspection"]
+    B --> C["Duplicate Detection"]
+    C --> D["Dataset Splitting"]
+    D --> E["Image Preprocessing"]
+    E --> F["PredatorNet Training"]
+    F --> G["BGRA and ACAL Checkpoints"]
+    G --> H["Model Evaluation"]
+    G --> I["MRI Image Prediction"]
+    H --> J["Performance Comparison"]
+```
 
 ## 3. Dataset Information
 

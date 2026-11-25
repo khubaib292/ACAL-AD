@@ -1,0 +1,54 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Logs and temporary files
+logs/
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Datasets
+data/raw/
+data/processed/
+datasets/
+AugmentedAlzheimerDataset/
+
+# Generated outputs
+outputs/dataset_inspection/
+outputs/dataset_split/
+outputs/evaluation/
+outputs/evaluation_results/
+outputs/evaluation_reconstructed_80_10_10/
+outputs/visualizations/
+
+# Training and experiment outputs
+results/
+runs/
+tensorboard/
+
+# Project archives
+*.zip
+
+# Notebook backups
+notebooks/*_backup.ipynb
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE settings
+.vscode/
+.idea/

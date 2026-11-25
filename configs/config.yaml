@@ -1,0 +1,257 @@
+
+# ============================================================
+# ACAL-AD Configuration
+# Adaptive Confusion-Aware Loss for Alzheimer's Disease
+# ============================================================
+
+project:
+  name: ACAL-AD
+  version: "1.0.0"
+  random_seed: 42
+
+# ------------------------------------------------------------
+# Paths
+# ------------------------------------------------------------
+paths:
+  project_root: "."
+  data_root: "data"
+  raw_data: "data/raw"
+  processed_data: "data/processed"
+  checkpoints: "models"
+  outputs: "outputs"
+  logs: "logs"
+
+# ------------------------------------------------------------
+# Kaggle dataset
+# ------------------------------------------------------------
+dataset:
+  name: Augmented Alzheimer MRI Dataset
+  kaggle_slug: uraninjo/augmented-alzheimer-mri-dataset
+  num_classes: 4
+
+  classes:
+    - MildDemented
+    - ModerateDemented
+    - NonDemented
+    - VeryMildDemented
+
+  image_extensions:
+    - .jpg
+    - .jpeg
+    - .png
+
+  verify_images: true
+  check_duplicates: true
+  check_near_duplicates: true
+
+# ------------------------------------------------------------
+# Dataset splitting
+# ------------------------------------------------------------
+data_split:
+  train: 0.70
+  validation: 0.15
+  test: 0.15
+  random_seed: 42
+  stratified: true
+  patient_level_split: false
+  leakage_check:
+    enabled: true
+    exact_duplicates: true
+    near_duplicates: true
+
+# ------------------------------------------------------------
+# Image preprocessing
+# ------------------------------------------------------------
+preprocessing:
+  image_size: 224
+  channels: 3
+  color_mode: RGB
+
+  resize:
+    enabled: true
+    method: bilinear
+
+  average_filter:
+    enabled: false
+    kernel_size: 3
+
+  clahe:
+    enabled: false
+    clip_limit: 2.0
+    tile_grid_size: 8
+
+  normalization:
+    mean: [0.485, 0.456, 0.406]
+    std: [0.229, 0.224, 0.225]
+
+  augmentation:
+    enabled: true
+    horizontal_flip: 0.5
+    rotation_degrees: 10
+
+    gaussian_noise:
+      enabled: true
+      sigma: 0.01
+
+# ------------------------------------------------------------
+# PredatorNet architecture
+# ------------------------------------------------------------
+model:
+  architecture: PredatorNet
+  num_classes: 4
+
+  backbone:
+    name: ResNet50
+    pretrained: true
+    fine_tune: true
+    remove_avgpool: true
+    remove_fc: true
+    output_channels: 2048
+    output_size: 7
+
+  eagle_attention:
+    enabled: true
+    attention_type: spatial
+    residual_gamma_initial: 0.0
+
+  region_importance:
+    enabled: true
+    activation: sigmoid
+
+  wolfpack_fusion:
+    enabled: true
+    branches: 3
+    fusion: average_logits
+
+# ------------------------------------------------------------
+# Loss functions
+# ------------------------------------------------------------
+loss:
+  baseline:
+    name: BGRA
+    cross_entropy_weight: 1.0
+    smoothness_weight: 0.01
+
+  proposed:
+    name: AdaptiveConfusionAwareLoss
+    cross_entropy_weight: 1.0
+    smoothness_weight: 0.01
+    confusion_weight: 0.1
+
+    adaptive:
+      enabled: true
+      update_from: training_only
+      ema_momentum: 0.9
+      epsilon: 0.000001
+
+# ------------------------------------------------------------
+# Training configuration
+# ------------------------------------------------------------
+training:
+  device: auto
+  epochs: 20
+  batch_size: 16
+  num_workers: 2
+
+  optimizer:
+    name: Adam
+    learning_rate: 0.0001
+    weight_decay: 0.0001
+
+  scheduler:
+    name: ReduceLROnPlateau
+    factor: 0.5
+    patience: 3
+
+  sampling:
+    weighted_random_sampler: true
+
+  early_stopping:
+    enabled: true
+    patience: 5
+
+  gradient_clipping:
+    enabled: true
+    max_norm: 1.0
+
+# ------------------------------------------------------------
+# Experimental comparison
+# ------------------------------------------------------------
+experiments:
+  baseline:
+    name: PredatorNet_BGRA
+    architecture: PredatorNet
+    loss: BGRA
+
+  proposed:
+    name: PredatorNet_ACAL
+    architecture: PredatorNet
+    loss: AdaptiveConfusionAwareLoss
+
+  fair_comparison:
+    same_dataset_split: true
+    same_architecture: true
+    same_preprocessing: true
+    same_optimizer: true
+    same_random_seed: true
+
+# ------------------------------------------------------------
+# Evaluation
+# ------------------------------------------------------------
+evaluation:
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1_score
+    - confusion_matrix
+    - roc_auc
+
+  average: macro
+  save_classification_report: true
+  save_confusion_matrix: true
+
+# ------------------------------------------------------------
+# Logging
+# ------------------------------------------------------------
+logging:
+  tensorboard: true
+  save_training_history: true
+  save_experiment_configuration: true
+
+# ------------------------------------------------------------
+# Checkpoints
+# ------------------------------------------------------------
+checkpoints:
+  save_best_model: true
+  save_last_model: true
+  monitor: validation_loss
+  mode: min
+
+# ------------------------------------------------------------
+# Reproducibility
+# ------------------------------------------------------------
+reproducibility:
+  deterministic: true
+  benchmark: false
+
+# ------------------------------------------------------------
+# Application
+# ------------------------------------------------------------
+application:
+  framework: streamlit
+  upload_enabled: true
+  supported_formats:
+    - jpg
+    - jpeg
+    - png
+
+# ------------------------------------------------------------
+# Research integrity
+# ------------------------------------------------------------
+research:
+  use_test_data_for_training: false
+  use_test_data_for_tuning: false
+  update_confusion_statistics_from_validation: false
+  update_confusion_statistics_from_test: false
+  report_only_actual_results: true

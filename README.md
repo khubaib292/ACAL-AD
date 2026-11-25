@@ -370,6 +370,24 @@ The project contains a reconstructed 80:10:10 dataset split for exploratory chec
 
 The original split membership used during checkpoint training has not been verified against the reconstructed manifest. Consequently, the reconstructed evaluation results must not be presented as confirmed independent test-set performance.
 
+### Exploratory Model Performance Comparison
+
+| Metric | BGRA (Seed 123) | ACAL (Seed 123) |
+|---|---:|---:|
+| Accuracy | 96.72% | 98.60% |
+| Balanced Accuracy | 96.96% | 99.23% |
+| Macro Precision | 97.86% | 98.91% |
+| Macro Recall | 96.96% | 99.23% |
+| Macro F1-score | 97.31% | 99.07% |
+| MCC | 0.9476 | 0.9771 |
+| Cohen's Kappa | 0.9463 | 0.9770 |
+| Log Loss | 0.0799 | 0.0309 |
+| Macro ROC-AUC | 0.9995 | 0.9998 |
+
+**Observation:** ACAL achieved a higher Macro F1-score than BGRA in this exploratory evaluation.
+
+**Limitation:** These results use a reconstructed dataset split. The original checkpoint training split has not been verified, so these results should not be presented as confirmed independent test performance.
+
 ## 12. Running Tests
 
 The project includes 28 automated tests.

@@ -161,8 +161,11 @@ The adaptive confusion weights use:
 Validation and test data must not update the confusion statistics.
 
 ## 6. Project Structure
-
+```text
 ACAL-AD/
+│
+├── assets/
+│   └── acal-ad-visualization.png
 │
 ├── configs/
 │   └── config.yaml
@@ -220,9 +223,10 @@ ACAL-AD/
 ├── .gitattributes
 ├── .gitignore
 ├── README.md
+├── __init__.py
 ├── requirements.txt
 └── requirements-dev.txt
-
+```
 ## 7. Technology Stack
 
 | Category | Technologies |

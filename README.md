@@ -113,6 +113,12 @@ flowchart TD
     E --> F["Alzheimer's Classification"]
 ```
 
+### Model Visualization
+
+The following visualization compares the BGRA baseline and proposed ACAL model, showing the original MRI image, Region Importance maps, and EagleAttention maps.
+
+![ACAL-AD Model Visualization](assets/acal-ad-visualization.png)
+
 ## 5. Loss Functions
 
 ### BGRA Baseline Loss
